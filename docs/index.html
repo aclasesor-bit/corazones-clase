@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Corazones de clase</title>
+<meta name="theme-color" content="#ff385c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Corazones">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icono.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icono-180.png">
+<style>
+:root{
+  --rausch:#ff385c; --rausch-act:#e00b41; --rausch-claro:#ffd1da;
+  --tinta:#222; --cuerpo:#3f3f3f; --gris:#6a6a6a; --gris2:#929292;
+  --linea:#ddd; --linea2:#ebebeb; --fondo:#f7f5f2; --tarjeta:#fff;
+  --sombra:0 6px 16px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--fondo);color:var(--tinta);
+  font-family:"Nunito",ui-rounded,"SF Pro Rounded",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  -webkit-tap-highlight-color:transparent}
+body{min-height:100vh;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+button{font:inherit;color:inherit;cursor:pointer}
+
+/* cabecera */
+header{position:sticky;top:0;z-index:5;background:rgba(247,245,242,.92);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--linea2)}
+.barra{max-width:1200px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.marca{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.marca svg{width:34px;height:34px;flex:none}
+.marca h1{font-size:22px;font-weight:800;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.marca small{display:block;font-size:13px;color:var(--gris);font-weight:600}
+.segmento{display:flex;background:#ecebe8;border-radius:999px;padding:4px}
+.segmento button{border:0;background:transparent;padding:8px 18px;border-radius:999px;font-weight:700;color:var(--gris)}
+.segmento button[aria-pressed="true"]{background:#fff;color:var(--tinta);box-shadow:var(--sombra)}
+.redondo{width:42px;height:42px;border-radius:50%;border:0;background:#ecebe8;display:grid;place-items:center;font-size:19px}
+.redondo:active{transform:scale(.94)}
+
+main{max-width:1200px;margin:0 auto;padding:22px 20px 60px}
+.resumen{display:flex;align-items:baseline;gap:10px;margin:0 2px 18px;color:var(--gris);font-weight:700}
+.resumen b{color:var(--rausch);font-size:26px;font-weight:900}
+
+/* rejilla de niños */
+.rejilla{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px}
+.nino{position:relative;background:var(--tarjeta);border-radius:22px;box-shadow:var(--sombra);
+  display:flex;flex-direction:column;overflow:hidden;transition:transform .15s}
+.nino.pulso{animation:pulso .55s}
+.nino.temblor{animation:temblor .4s}
+@keyframes pulso{0%{transform:scale(1)}35%{transform:scale(1.07)}100%{transform:scale(1)}}
+@keyframes temblor{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.dar{border:0;background:transparent;padding:18px 14px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.dar:active{background:#fff5f7}
+.avatar{width:62px;height:62px;border-radius:50%;display:grid;place-items:center;font-size:28px;font-weight:900;color:#fff}
+.nombre{font-size:19px;font-weight:800;line-height:1.15;word-break:break-word}
+.cuenta{display:flex;align-items:center;gap:6px;font-size:40px;font-weight:900;color:var(--rausch);line-height:1}
+.cuenta.cero{color:#cfcfcf}
+.cuenta svg{width:34px;height:34px}
+.minis{min-height:18px;display:flex;flex-wrap:wrap;justify-content:center;gap:2px;max-width:150px}
+.minis svg{width:14px;height:14px}
+.minis span{font-size:13px;font-weight:800;color:var(--rausch)}
+.pie{display:flex;border-top:1px solid var(--linea2)}
+.pie button{flex:1;border:0;background:transparent;padding:12px 0;font-size:15px;font-weight:800}
+.pie .quitar{color:var(--gris)}
+.pie .quitar:disabled{color:#d6d6d6;cursor:default}
+.pie .poner{color:#fff;background:var(--rausch)}
+.pie .poner:active{background:var(--rausch-act)}
+
+/* semana */
+.tabla-caja{background:#fff;border-radius:22px;box-shadow:var(--sombra);overflow:auto}
+table{border-collapse:collapse;width:100%;min-width:520px}
+th,td{padding:12px 14px;text-align:center;border-bottom:1px solid var(--linea2);font-weight:700}
+th{font-size:13px;color:var(--gris);text-transform:uppercase;letter-spacing:.04em}
+th.hoy,td.hoy{background:#fff5f7}
+td:first-child,th:first-child{text-align:left}
+td.num{color:var(--rausch);font-size:18px}
+td.num.cero{color:#cfcfcf}
+td.total{font-size:20px;font-weight:900;color:var(--tinta)}
+.nav-semana{display:flex;align-items:center;gap:10px;margin-bottom:14px;font-weight:800}
+.nav-semana span{flex:1;text-align:center}
+
+/* vacío / bienvenida */
+.vacio{background:#fff;border-radius:22px;box-shadow:var(--sombra);padding:34px 24px;text-align:center;max-width:560px;margin:30px auto}
+.vacio h2{margin:10px 0 6px;font-size:26px}
+.vacio p{color:var(--gris);font-weight:600;line-height:1.5}
+
+.boton{border:0;border-radius:999px;background:var(--rausch);color:#fff;font-weight:800;padding:14px 26px;font-size:16px}
+.boton:active{background:var(--rausch-act)}
+.boton.sec{background:#ecebe8;color:var(--tinta)}
+.boton.peligro{background:#fff;color:#c13515;border:1px solid #f3c3b8}
+
+/* ajustes */
+dialog{border:0;border-radius:24px;padding:0;width:min(560px,94vw);box-shadow:0 20px 60px rgba(0,0,0,.25)}
+dialog::backdrop{background:rgba(0,0,0,.4)}
+.dlg{padding:24px}
+.dlg h2{margin:0 0 16px;font-size:22px}
+label.campo{display:block;font-weight:800;margin:14px 0 6px}
+label.campo small{display:block;color:var(--gris);font-weight:600}
+input[type=text],textarea{width:100%;font:inherit;font-size:16px;border:1px solid var(--linea);border-radius:14px;padding:12px 14px;background:#fff}
+textarea{min-height:200px;resize:vertical;line-height:1.5}
+input:focus,textarea:focus{outline:2px solid var(--tinta);outline-offset:1px}
+.fila{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.interruptor{display:flex;align-items:center;justify-content:space-between;margin-top:16px;font-weight:800}
+.interruptor input{width:22px;height:22px;accent-color:var(--rausch)}
+hr{border:0;border-top:1px solid var(--linea2);margin:22px 0}
+
+/* celebración */
+#fuegos{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:20}
+#celebra{position:fixed;inset:0;z-index:19;display:grid;place-items:center;pointer-events:none;opacity:0}
+#celebra.ver{animation:celebra 2.1s ease-out forwards}
+#celebra .caja{text-align:center;transform:scale(.6)}
+#celebra.ver .caja{animation:salto 2.1s cubic-bezier(.2,1.4,.4,1) forwards}
+#celebra svg{width:min(42vw,260px);height:auto;filter:drop-shadow(0 10px 30px rgba(255,56,92,.55))}
+#celebra .txt{font-size:clamp(28px,6vw,56px);font-weight:900;color:#fff;text-shadow:0 3px 18px rgba(0,0,0,.35);margin-top:6px}
+#celebra .sub{font-size:clamp(18px,3vw,28px);font-weight:800;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.35)}
+#velo{position:fixed;inset:0;z-index:18;pointer-events:none;opacity:0;
+  background:radial-gradient(circle at 50% 50%,rgba(255,56,92,.55),rgba(80,0,30,.75))}
+#velo.ver{animation:velo 2.1s ease-out forwards}
+@keyframes celebra{0%{opacity:0}8%{opacity:1}80%{opacity:1}100%{opacity:0}}
+@keyframes velo{0%{opacity:0}8%{opacity:1}75%{opacity:.85}100%{opacity:0}}
+@keyframes salto{0%{transform:scale(.3) rotate(-12deg)}25%{transform:scale(1.12) rotate(4deg)}40%{transform:scale(1) rotate(0)}100%{transform:scale(1.04)}}
+@media (prefers-reduced-motion:reduce){
+  .nino.pulso,.nino.temblor,#celebra.ver .caja{animation:none}
+}
+.oculto{display:none!important}
+.aviso{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--tinta);color:#fff;
+  padding:12px 20px;border-radius:999px;font-weight:700;z-index:30;opacity:0;transition:opacity .2s;pointer-events:none}
+.aviso.ver{opacity:1}
+@media (max-width:560px){
+  .rejilla{grid-template-columns:repeat(2,1fr);gap:10px}
+  .avatar{width:48px;height:48px;font-size:22px}
+  .nombre{font-size:16px}
+  .cuenta{font-size:32px}
+  .barra{padding:10px 14px}
+  main{padding:16px 12px 50px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="barra">
+    <div class="marca">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#ff385c" d="M16 29s-12-7.4-12-16A7 7 0 0 1 16 8.6 7 7 0 0 1 28 13c0 8.6-12 16-12 16z"/></svg>
+      <div style="min-width:0"><h1 id="titulo">Corazones de clase</h1><small id="fecha"></small></div>
+    </div>
+    <div class="segmento" role="group" aria-label="Vista">
+      <button id="vHoy" aria-pressed="true">Hoy</button>
+      <button id="vSemana" aria-pressed="false">Semana</button>
+    </div>
+    <button class="redondo" id="bSonido" title="Sonido" aria-label="Sonido"></button>
+    <button class="redondo" id="bPantalla" title="Pantalla completa" aria-label="Pantalla completa">⛶</button>
+    <button class="redondo" id="bAjustes" title="Ajustes" aria-label="Ajustes">⚙️</button>
+  </div>
+</header>
+
+<main>
+  <section id="pHoy">
+    <div class="resumen" id="resumen"></div>
+    <div class="rejilla" id="rejilla"></div>
+  </section>
+  <section id="pSemana" class="oculto">
+    <div class="nav-semana">
+      <button class="redondo" id="semAnt" aria-label="Semana anterior">‹</button>
+      <span id="semTitulo"></span>
+      <button class="redondo" id="semSig" aria-label="Semana siguiente">›</button>
+    </div>
+    <div class="tabla-caja"><table id="tabla"></table></div>
+  </section>
+  <section id="pVacio" class="vacio oculto">
+    <svg viewBox="0 0 32 32" width="70" height="70" aria-hidden="true"><path fill="#ff385c" d="M16 29s-12-7.4-12-16A7 7 0 0 1 16 8.6 7 7 0 0 1 28 13c0 8.6-12 16-12 16z"/></svg>
+    <h2>¡Hola, profe!</h2>
+    <p>Escribe los nombres de tu clase y empieza a repartir corazones.<br>Cada día empiezan todos con 0.</p>
+    <button class="boton" id="bEmpezar">Escribir la clase</button>
+  </section>
+</main>
+
+<dialog id="dlg">
+  <form method="dialog" class="dlg" id="formAjustes">
+    <h2>Ajustes</h2>
+    <label class="campo" for="aClase">Nombre de la clase</label>
+    <input type="text" id="aClase" maxlength="40" placeholder="Por ejemplo: 2.º B · Montepinar">
+    <label class="campo" for="aNinos">Niños y niñas<small>Uno por línea. Se guardan solo en este dispositivo.</small></label>
+    <textarea id="aNinos" placeholder="Lucía&#10;Hugo&#10;Martina"></textarea>
+    <label class="interruptor">Sonido <input type="checkbox" id="aSonido"></label>
+    <div class="fila">
+      <button class="boton" value="guardar" id="aGuardar">Guardar</button>
+      <button class="boton sec" value="cancelar" formnovalidate>Cancelar</button>
+    </div>
+    <hr>
+    <div class="fila" style="margin-top:0">
+      <button type="button" class="boton sec" id="aCero">Poner hoy a 0</button>
+      <button type="button" class="boton sec" id="aExportar">Copia de seguridad</button>
+      <button type="button" class="boton sec" id="aImportar">Recuperar copia</button>
+      <input type="file" id="aFichero" accept="application/json,.json" class="oculto">
+    </div>
+    <div class="fila">
+      <button type="button" class="boton peligro" id="aBorrar">Borrar todo</button>
+    </div>
+  </form>
+</dialog>
+
+<div id="velo"></div>
+<div id="celebra"><div class="caja">
+  <svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="gc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff7a93"/><stop offset="1" stop-color="#e00b41"/></linearGradient></defs><path fill="url(#gc)" d="M16 29s-12-7.4-12-16A7 7 0 0 1 16 8.6 7 7 0 0 1 28 13c0 8.6-12 16-12 16z"/><ellipse cx="10.5" cy="11.5" rx="2.6" ry="1.6" fill="#fff" opacity=".55" transform="rotate(-35 10.5 11.5)"/></svg>
+  <div class="txt" id="celTxt"></div>
+  <div class="sub" id="celSub"></div>
+</div></div>
+<canvas id="fuegos"></canvas>
+<div class="aviso" id="aviso" role="status"></div>
+
+<script>
+"use strict";
+/* ---------- datos (solo en este dispositivo) ---------- */
+var CLAVE = "corazones-clase-v1";
+var COLORES = ["#ff385c","#ff8a00","#00a699","#7b61ff","#008489","#e91e8c","#2f80ed","#c2410c","#16a34a","#9333ea","#d97706","#0891b2"];
+var CORAZON = "M16 29s-12-7.4-12-16A7 7 0 0 1 16 8.6 7 7 0 0 1 28 13c0 8.6-12 16-12 16z";
+
+function vacio(){ return {clase:"", ninos:[], dias:{}, sonido:true}; }
+function cargar(){
+  try {
+    var e = JSON.parse(localStorage.getItem(CLAVE) || "null");
+    if (!e || !Array.isArray(e.ninos) || typeof e.dias !== "object" || !e.dias) return vacio();
+    if (typeof e.sonido !== "boolean") e.sonido = true;
+    if (typeof e.clase !== "string") e.clase = "";
+    return e;
+  } catch(err){ return vacio(); }
+}
+var est = cargar();
+function guardar(){
+  try { localStorage.setItem(CLAVE, JSON.stringify(est)); }
+  catch(err){ avisar("No se ha podido guardar en este dispositivo"); }
+}
+
+function dos(n){ return (n < 10 ? "0" : "") + n; }
+function claveDia(d){ return d.getFullYear() + "-" + dos(d.getMonth() + 1) + "-" + dos(d.getDate()); }
+function hoy(){ return claveDia(new Date()); }
+function diaDe(id, dia){ var d = est.dias[dia || hoy()]; return (d && d[id]) || 0; }
+function poner(id, delta){
+  var k = hoy();
+  if (!est.dias[k]) est.dias[k] = {};
+  var n = Math.max(0, (est.dias[k][id] || 0) + delta);
+  if (n === 0) delete est.dias[k][id]; else est.dias[k][id] = n;
+  guardar();
+  return n;
+}
+
+/* ---------- utilidades de pintado (sin innerHTML con datos) ---------- */
+function el(tag, attrs, hijos){
+  var e = document.createElement(tag);
+  if (attrs) for (var a in attrs){
+    if (a === "texto") e.textContent = attrs[a];
+    else if (a === "clase") e.className = attrs[a];
+    else e.setAttribute(a, attrs[a]);
+  }
+  (hijos || []).forEach(function(h){ if (h) e.appendChild(h); });
+  return e;
+}
+function svgCorazon(color){
+  var ns = "http://www.w3.org/2000/svg";
+  var s = document.createElementNS(ns, "svg"); s.setAttribute("viewBox", "0 0 32 32"); s.setAttribute("aria-hidden", "true");
+  var p = document.createElementNS(ns, "path"); p.setAttribute("d", CORAZON); p.setAttribute("fill", color || "#ff385c");
+  s.appendChild(p); return s;
+}
+var $ = function(id){ return document.getElementById(id); };
+function avisar(t){
+  var a = $("aviso"); a.textContent = t; a.classList.add("ver");
+  clearTimeout(avisar.t); avisar.t = setTimeout(function(){ a.classList.remove("ver"); }, 2200);
+}
+function inicial(nombre){ var c = (nombre.trim()[0] || "?"); return c.toLocaleUpperCase("es"); }
+
+/* ---------- vistas ---------- */
+var vista = "hoy", desplSemana = 0;
+var MESES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+var DIAS = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+
+function pintar(){
+  $("titulo").textContent = est.clase || "Corazones de clase";
+  var d = new Date();
+  $("fecha").textContent = DIAS[d.getDay()] + ", " + d.getDate() + " de " + MESES[d.getMonth()];
+  $("bSonido").textContent = est.sonido ? "🔊" : "🔇";
+  $("bSonido").setAttribute("aria-pressed", est.sonido ? "true" : "false");
+  var hay = est.ninos.length > 0;
+  $("pVacio").classList.toggle("oculto", hay);
+  $("pHoy").classList.toggle("oculto", !hay || vista !== "hoy");
+  $("pSemana").classList.toggle("oculto", !hay || vista !== "semana");
+  $("vHoy").setAttribute("aria-pressed", vista === "hoy");
+  $("vSemana").setAttribute("aria-pressed", vista === "semana");
+  if (!hay) return;
+  if (vista === "hoy") pintarHoy(); else pintarSemana();
+}
+
+function minis(n){
+  var c = el("div", {clase:"minis"});
+  var max = 10;
+  for (var i = 0; i < Math.min(n, max); i++) c.appendChild(svgCorazon());
+  if (n > max) c.appendChild(el("span", {texto:"+" + (n - max)}));
+  return c;
+}
+
+function tarjeta(nino){
+  var n = diaDe(nino.id);
+  var cuenta = el("div", {clase:"cuenta" + (n ? "" : " cero")}, [svgCorazon(n ? "#ff385c" : "#d9d9d9"), el("b", {texto:String(n)})]);
+  var dar = el("button", {clase:"dar", "aria-label":"Dar un corazón a " + nino.nombre}, [
+    el("div", {clase:"avatar", style:"background:" + nino.color, texto:inicial(nino.nombre)}),
+    el("div", {clase:"nombre", texto:nino.nombre}),
+    cuenta, minis(n)
+  ]);
+  var quitar = el("button", {clase:"quitar", "aria-label":"Quitar un corazón a " + nino.nombre, texto:"− Quitar"});
+  if (!n) quitar.disabled = true;
+  var mas = el("button", {clase:"poner", "aria-label":"Dar un corazón a " + nino.nombre, texto:"+ ❤"});
+  var t = el("div", {clase:"nino", "data-id":nino.id}, [dar, el("div", {clase:"pie"}, [quitar, mas])]);
+  dar.addEventListener("click", function(){ darCorazon(nino, t); });
+  mas.addEventListener("click", function(){ darCorazon(nino, t); });
+  quitar.addEventListener("click", function(){ quitarCorazon(nino, t); });
+  return t;
+}
+
+function pintarHoy(){
+  var r = $("rejilla"); r.textContent = "";
+  var total = 0;
+  est.ninos.forEach(function(n){ total += diaDe(n.id); r.appendChild(tarjeta(n)); });
+  var res = $("resumen"); res.textContent = "";
+  res.appendChild(el("b", {texto:String(total)}));
+  res.appendChild(el("span", {texto: total === 1 ? "corazón repartido hoy" : "corazones repartidos hoy"}));
+}
+
+function refrescarTarjeta(nino, t){
+  var nueva = tarjeta(nino);
+  t.replaceWith(nueva);
+  var total = 0; est.ninos.forEach(function(n){ total += diaDe(n.id); });
+  $("resumen").firstChild.textContent = String(total);
+  $("resumen").lastChild.textContent = total === 1 ? "corazón repartido hoy" : "corazones repartidos hoy";
+  return nueva;
+}
+
+function lunesDe(desplaz){
+  var d = new Date(); d.setHours(12,0,0,0);
+  var dw = (d.getDay() + 6) % 7; // 0 = lunes
+  d.setDate(d.getDate() - dw + desplaz * 7);
+  return d;
+}
+function pintarSemana(){
+  var lun = lunesDe(desplSemana), dias = [];
+  for (var i = 0; i < 5; i++){ var x = new Date(lun); x.setDate(lun.getDate() + i); dias.push(x); }
+  var vie = dias[4];
+  $("semTitulo").textContent = desplSemana === 0 ? "Esta semana" :
+    (lun.getDate() + " " + MESES[lun.getMonth()].slice(0,3) + " – " + vie.getDate() + " " + MESES[vie.getMonth()].slice(0,3));
+  $("semSig").disabled = desplSemana >= 0;
+  var hk = hoy();
+  var tabla = $("tabla"); tabla.textContent = "";
+  var cab = el("tr", null, [el("th", {texto:"Nombre"})]);
+  var letras = ["L","M","X","J","V"];
+  dias.forEach(function(d, i){ cab.appendChild(el("th", {clase: claveDia(d) === hk ? "hoy" : "", texto:letras[i] + " " + d.getDate()})); });
+  cab.appendChild(el("th", {texto:"Semana"}));
+  cab.appendChild(el("th", {texto:"Total"}));
+  tabla.appendChild(el("thead", null, [cab]));
+  var cuerpo = el("tbody");
+  est.ninos.forEach(function(n){
+    var fila = el("tr", null, [el("td", {texto:n.nombre})]);
+    var sem = 0;
+    dias.forEach(function(d){
+      var k = claveDia(d), v = diaDe(n.id, k); sem += v;
+      fila.appendChild(el("td", {clase:"num" + (v ? "" : " cero") + (k === hk ? " hoy" : ""), texto: v ? String(v) : "·"}));
+    });
+    var tot = 0; for (var k in est.dias) tot += (est.dias[k][n.id] || 0);
+    fila.appendChild(el("td", {clase:"total", texto:String(sem)}));
+    fila.appendChild(el("td", {clase:"total", texto:String(tot)}));
+    cuerpo.appendChild(fila);
+  });
+  tabla.appendChild(cuerpo);
+}
+
+/* ---------- acciones ---------- */
+var FRASES = ["¡Bravo!","¡Genial!","¡Muy bien!","¡Fenomenal!","¡Increíble!","¡Así se hace!","¡Estupendo!","¡Olé!"];
+function darCorazon(nino, t){
+  var n = poner(nino.id, +1);
+  var r = t.getBoundingClientRect();
+  var nueva = refrescarTarjeta(nino, t);
+  nueva.classList.add("pulso");
+  celebrar(nino, n, r.left + r.width / 2, r.top + r.height / 2);
+}
+function quitarCorazon(nino, t){
+  if (!diaDe(nino.id)) return;
+  poner(nino.id, -1);
+  var nueva = refrescarTarjeta(nino, t);
+  nueva.classList.add("temblor");
+  sonar("quitar");
+}
+
+/* ---------- sonido (sintetizado, sin ficheros) ---------- */
+var ctxAudio = null, ruido = null;
+function audio(){
+  if (!est.sonido) return null;
+  try {
+    if (!ctxAudio){ var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null; ctxAudio = new AC(); }
+    if (ctxAudio.state === "suspended") ctxAudio.resume();
+    return ctxAudio;
+  } catch(err){ return null; }
+}
+function salida(ctx){
+  if (!salida.g){
+    var comp = ctx.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 6;
+    var g = ctx.createGain(); g.gain.value = .9; g.connect(comp); comp.connect(ctx.destination);
+    salida.g = g;
+  }
+  return salida.g;
+}
+function nota(ctx, hz, ini, dur, vol, tipo){
+  var t = ctx.currentTime + ini, o = ctx.createOscillator(), g = ctx.createGain();
+  o.type = tipo || "triangle"; o.frequency.setValueAtTime(hz, t);
+  g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .012);
+  g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+  o.connect(g); g.connect(salida(ctx)); o.start(t); o.stop(t + dur + .03);
+}
+function deslizar(ctx, a, b, ini, dur, vol, tipo){
+  var t = ctx.currentTime + ini, o = ctx.createOscillator(), g = ctx.createGain();
+  o.type = tipo || "sine"; o.frequency.setValueAtTime(a, t); o.frequency.exponentialRampToValueAtTime(b, t + dur);
+  g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+  o.connect(g); g.connect(salida(ctx)); o.start(t); o.stop(t + dur + .03);
+}
+function estampido(ctx, ini, vol){
+  if (!ruido){
+    var n = Math.floor(ctx.sampleRate * .6); ruido = ctx.createBuffer(1, n, ctx.sampleRate);
+    var d = ruido.getChannelData(0); for (var i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n);
+  }
+  var t = ctx.currentTime + ini, f = ctx.createBufferSource(); f.buffer = ruido;
+  var p = ctx.createBiquadFilter(); p.type = "lowpass";
+  p.frequency.setValueAtTime(3200, t); p.frequency.exponentialRampToValueAtTime(200, t + .4);
+  var g = ctx.createGain(); g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t + .5);
+  f.connect(p); p.connect(g); g.connect(salida(ctx)); f.start(t); f.stop(t + .55);
+}
+function sonar(cual){
+  var ctx = audio(); if (!ctx) return;
+  try {
+    if (cual === "quitar"){
+      deslizar(ctx, 520, 190, 0, .38, .22, "sine");
+      nota(ctx, 196, .05, .3, .08, "triangle");
+      return;
+    }
+    // ¡corazón! — chispazo que sube, estampido, fanfarria y lluvia de campanitas
+    deslizar(ctx, 260, 1500, 0, .28, .16, "sawtooth");
+    estampido(ctx, .26, .6);
+    deslizar(ctx, 120, 45, .26, .45, .5, "sine");
+    var fan = [523.25, 659.25, 783.99, 1046.5];
+    fan.forEach(function(hz, i){
+      nota(ctx, hz, .3 + i * .1, .32, .2, "square");
+      nota(ctx, hz * 2, .3 + i * .1, .25, .06, "triangle");
+    });
+    [1046.5, 1318.5, 1568].forEach(function(hz){ nota(ctx, hz, .72, 1.1, .14, "triangle"); });
+    nota(ctx, 523.25, .72, 1.1, .12, "sawtooth");
+    estampido(ctx, .74, .35);
+    for (var i = 0; i < 14; i++) nota(ctx, 1800 + Math.random() * 2600, .85 + Math.random() * .9, .16, .05, "sine");
+  } catch(err){}
+}
+
+/* ---------- efectos: lluvia de corazones ---------- */
+var lienzo = $("fuegos"), c2 = lienzo.getContext("2d"), parts = [], animando = false, tFin = 0;
+var poco = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+var pathCor = (typeof Path2D !== "undefined") ? new Path2D(CORAZON) : null;
+function ajustar(){
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  lienzo.width = innerWidth * dpr; lienzo.height = innerHeight * dpr;
+  c2.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+addEventListener("resize", ajustar); ajustar();
+var TONOS = ["#ff385c","#ff7a93","#ffd1da","#ffb400","#ffffff","#e00b41"];
+function lanzar(x, y, cuantos, fuerza){
+  for (var i = 0; i < cuantos; i++){
+    var a = Math.random() * Math.PI * 2, v = fuerza * (.35 + Math.random() * .75);
+    parts.push({x:x, y:y, vx:Math.cos(a) * v, vy:Math.sin(a) * v - fuerza * .35,
+      s:10 + Math.random() * 22, r:Math.random() * 6, vr:(Math.random() - .5) * 8,
+      col:TONOS[(Math.random() * TONOS.length) | 0], vida:1.6 + Math.random() * 1.1, t:0,
+      chispa: Math.random() < .3});
+  }
+}
+function celebrar(nino, n, x, y){
+  sonar("dar");
+  $("celTxt").textContent = FRASES[(Math.random() * FRASES.length) | 0] + " " + nino.nombre;
+  $("celSub").textContent = n === 1 ? "¡Primer corazón de hoy!" : "¡Ya llevas " + n + " corazones hoy!";
+  ["velo","celebra"].forEach(function(id){ var e = $(id); e.classList.remove("ver"); void e.offsetWidth; e.classList.add("ver"); });
+  if (poco) return;
+  ajustar();
+  lanzar(x, y, 40, 640);
+  setTimeout(function(){ lanzar(innerWidth / 2, innerHeight / 2, 70, 900); }, 280);
+  setTimeout(function(){ lanzar(innerWidth * .2, innerHeight * .35, 30, 600); lanzar(innerWidth * .8, innerHeight * .35, 30, 600); }, 650);
+  tFin = performance.now() + 3200;
+  if (!animando){ animando = true; ultimo = performance.now(); requestAnimationFrame(bucle); }
+}
+var ultimo = 0;
+function bucle(ahora){
+  var dt = Math.min(.05, (ahora - ultimo) / 1000); ultimo = ahora; // avanza por reloj, no por fotograma
+  c2.clearRect(0, 0, innerWidth, innerHeight);
+  for (var i = parts.length - 1; i >= 0; i--){
+    var p = parts[i]; p.t += dt;
+    if (p.t > p.vida){ parts.splice(i, 1); continue; }
+    p.vy += 900 * dt; p.vx *= (1 - 1.2 * dt); p.vy *= (1 - .6 * dt);
+    p.x += p.vx * dt; p.y += p.vy * dt; p.r += p.vr * dt;
+    var alfa = Math.max(0, 1 - p.t / p.vida);
+    c2.globalAlpha = alfa;
+    if (p.chispa || !pathCor){
+      c2.fillStyle = p.col; c2.beginPath(); c2.arc(p.x, p.y, p.s / 6, 0, Math.PI * 2); c2.fill();
+    } else {
+      c2.save(); c2.translate(p.x, p.y); c2.rotate(p.r * .2); var k = p.s / 32; c2.scale(k, k); c2.translate(-16, -17);
+      c2.fillStyle = p.col; c2.fill(pathCor); c2.restore();
+    }
+  }
+  c2.globalAlpha = 1;
+  if (parts.length && ahora < tFin) requestAnimationFrame(bucle);
+  else { parts = []; c2.clearRect(0, 0, innerWidth, innerHeight); animando = false; }
+}
+
+/* ---------- ajustes ---------- */
+function abrirAjustes(){
+  $("aClase").value = est.clase;
+  $("aNinos").value = est.ninos.map(function(n){ return n.nombre; }).join("\n");
+  $("aSonido").checked = est.sonido;
+  $("dlg").showModal();
+}
+function nuevoId(){ return "n" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+$("dlg").addEventListener("close", function(){
+  if ($("dlg").returnValue !== "guardar") return;
+  est.clase = $("aClase").value.trim().slice(0, 40);
+  est.sonido = $("aSonido").checked;
+  var vistos = {}, previos = {};
+  est.ninos.forEach(function(n){ previos[n.nombre.toLocaleLowerCase("es")] = n; });
+  var lista = [];
+  $("aNinos").value.split(/\r?\n/).forEach(function(linea){
+    var nombre = linea.trim().replace(/\s+/g, " ").slice(0, 30);
+    if (!nombre) return;
+    var k = nombre.toLocaleLowerCase("es");
+    if (vistos[k]) return; vistos[k] = 1;
+    var p = previos[k];
+    lista.push(p ? {id:p.id, nombre:nombre, color:p.color} : {id:nuevoId(), nombre:nombre, color:COLORES[lista.length % COLORES.length]});
+  });
+  est.ninos = lista;
+  guardar(); pintar();
+  avisar("Guardado");
+});
+$("aCero").addEventListener("click", function(){
+  if (!confirm("¿Poner los corazones de hoy a 0 para todos?")) return;
+  delete est.dias[hoy()]; guardar(); pintar(); $("dlg").close("cancelar"); avisar("Hoy está a 0");
+});
+$("aBorrar").addEventListener("click", function(){
+  if (!confirm("Se borrarán la clase y todo el historial de este dispositivo. ¿Seguro?")) return;
+  est = vacio(); guardar(); $("dlg").close("cancelar"); pintar();
+});
+$("aExportar").addEventListener("click", function(){
+  var b = new Blob([JSON.stringify(est, null, 1)], {type:"application/json"});
+  var a = el("a", {href:URL.createObjectURL(b), download:"corazones-" + hoy() + ".json"});
+  document.body.appendChild(a); a.click(); a.remove();
+});
+$("aImportar").addEventListener("click", function(){ $("aFichero").click(); });
+$("aFichero").addEventListener("change", function(){
+  var f = this.files && this.files[0]; if (!f) return;
+  var lector = new FileReader();
+  lector.onload = function(){
+    try {
+      var e = JSON.parse(lector.result);
+      if (!e || !Array.isArray(e.ninos) || typeof e.dias !== "object") throw 0;
+      e.ninos = e.ninos.filter(function(n){ return n && typeof n.nombre === "string" && typeof n.id === "string"; })
+        .map(function(n, i){ return {id:n.id, nombre:n.nombre.slice(0, 30), color:/^#[0-9a-f]{6}$/i.test(n.color) ? n.color : COLORES[i % COLORES.length]}; });
+      est = {clase: typeof e.clase === "string" ? e.clase.slice(0, 40) : "", ninos:e.ninos, dias:e.dias || {}, sonido:e.sonido !== false};
+      guardar(); $("dlg").close("cancelar"); pintar(); avisar("Copia recuperada");
+    } catch(err){ avisar("Ese fichero no es una copia válida"); }
+  };
+  lector.readAsText(f);
+  this.value = "";
+});
+
+/* ---------- botones de cabecera ---------- */
+$("vHoy").addEventListener("click", function(){ vista = "hoy"; pintar(); });
+$("vSemana").addEventListener("click", function(){ vista = "semana"; desplSemana = 0; pintar(); });
+$("semAnt").addEventListener("click", function(){ desplSemana--; pintar(); });
+$("semSig").addEventListener("click", function(){ if (desplSemana < 0){ desplSemana++; pintar(); } });
+$("bAjustes").addEventListener("click", abrirAjustes);
+$("bEmpezar").addEventListener("click", abrirAjustes);
+$("bSonido").addEventListener("click", function(){ est.sonido = !est.sonido; guardar(); pintar(); if (est.sonido) sonar("quitar"); });
+$("bPantalla").addEventListener("click", function(){
+  var d = document;
+  if (d.fullscreenElement || d.webkitFullscreenElement) (d.exitFullscreen || d.webkitExitFullscreen).call(d);
+  else { var r = d.documentElement; var f = r.requestFullscreen || r.webkitRequestFullscreen; if (f) f.call(r); }
+});
+
+/* si cambia el día con la app abierta, todos vuelven a 0 */
+var diaPintado = hoy();
+function vigilarDia(){ if (hoy() !== diaPintado){ diaPintado = hoy(); pintar(); } }
+setInterval(vigilarDia, 30000);
+document.addEventListener("visibilitychange", function(){ if (!document.hidden) vigilarDia(); });
+
+pintar();
+if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(function(){});
+</script>
+</body>
+</html>
